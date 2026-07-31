@@ -1924,6 +1924,23 @@ foo:
 	}
 }
 
+func TestFlowMapRejectsLeadingComma(t *testing.T) {
+	tests := []struct {
+		name string
+		yaml string
+	}{
+		{name: "leading comma", yaml: `{, a: 1}`},
+		{name: "only comma", yaml: `{,}`},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if _, err := parser.ParseBytes([]byte(test.yaml), parser.ParseComments); err == nil {
+				t.Fatal("failed to reject leading comma in flow mapping")
+			}
+		})
+	}
+}
+
 func TestNodePath(t *testing.T) {
 	yml := `
 a: # commentA

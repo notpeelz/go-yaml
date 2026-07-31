@@ -343,6 +343,9 @@ func (p *parser) parseFlowMap(ctx *context) (*ast.MappingNode, error) {
 
 		var entryTk *Token
 		if tk.Type() == token.CollectEntryType {
+			if isFirst {
+				return nil, errors.ErrSyntax("expected mapping element, but found ','", tk.RawToken())
+			}
 			entryTk = tk
 			ctx.goNext()
 		} else if !isFirst {
